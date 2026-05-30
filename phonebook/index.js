@@ -34,6 +34,15 @@ app.get('/api/persons',(req,res)=>{
     res.json(persons)
 })
 
+app.get('/info',(req,res)=>{
+  const number = persons.length
+  const now = new Date()
+
+  res.send(`Phonebook has info for ${number} person <br>
+    ${now}
+    `)
+})
+
 app.listen(port,()=>{
   console.log(`The server is running on http://localhost:${port}`)
 })
