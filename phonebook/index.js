@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 
 const port = 3001
 
@@ -25,6 +26,14 @@ const persons = [
       "number": "39-23-6423122"
     }
 ]
+
+app.use(express.json())
+
+morgan.token('body',(req,res)=>{
+  return req.method==='POST' ? JSON.stringify(req.body) : ''
+})
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.get('/',(req,res)=>{
     res.send('<h1>Hello World!</h1>')
@@ -61,7 +70,6 @@ app.delete('/api/persons/:id',(req,res)=>{
   res.json(person)
 })
 
-app.use(express.json())
 
 app.post('/api/persons',(req,res)=>{
   const body = req.body
