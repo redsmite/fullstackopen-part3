@@ -70,6 +70,12 @@ app.post('/api/persons',(req,res)=>{
     return res.status(400).json({ error: 'name or number is missing' })
   }
 
+  const nameExist = persons.find(person=>person.name === body.name)
+
+  if(nameExist){
+    return res.status(400).json({error: 'name should be unique'})
+  }
+
   const id = Math.floor(Math.random() * 10000)
 
   const newObject = {
