@@ -61,6 +61,30 @@ app.delete('/api/persons/:id',(req,res)=>{
   res.json(person)
 })
 
+app.use(express.json())
+
+app.post('/api/persons',(req,res)=>{
+  const body = req.body
+
+  if (!body.name || !body.number) {
+    return res.status(400).json({ error: 'name or number is missing' })
+  }
+
+  const id = Math.floor(Math.random() * 10000)
+
+  const newObject = {
+    id: id,
+    name: body.name,
+    number: body.number
+  }
+
+  const updatedPersons = persons.concat(newObject)
+
+  console.log(updatedPersons)
+
+  res.json(newObject)
+})
+
 app.listen(port,()=>{
   console.log(`The server is running on http://localhost:${port}`)
 })
