@@ -43,6 +43,24 @@ app.get('/info',(req,res)=>{
     `)
 })
 
+app.get('/api/persons/:id',(req,res)=>{
+  const id = req.params.id
+  const person = persons.find(person=>person.id === id)
+
+  if(!person) { 
+    return res.status(404).send("Contact not found!")
+  }
+
+  res.json(person)
+})
+
+app.delete('/api/persons/:id',(req,res)=>{
+  const id = req.params.id
+  const person = persons.filter(person=>person.id != id)
+
+  res.json(person)
+})
+
 app.listen(port,()=>{
   console.log(`The server is running on http://localhost:${port}`)
 })
