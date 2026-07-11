@@ -1,5 +1,9 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
+
+app.use(cors())
+app.use(express.json())
 
 let notes = [
   {
@@ -37,44 +41,37 @@ app.get('/api/notes/:id',(request,response)=>{
   }
 })
 
-app.delete('/api/notes/:id',(request,response)=>{
+app.delete('/api/notes/:id', (request, response) => {
   const id = request.params.id
-  const note = notes.filter(n=>n.id!=id)
-  
+  notes = notes.filter(n => n.id !== id)
   response.status(204).end()
-  response.json(note)
 })
 
-app.use(express.json())
-
 const generateId = () => {
-  const maxId = notes.length > 0 ?
-  Math.max(...notes.map(n=>n.id))
-  : 0
-
+  const maxId = notes.length > 0
+    ? Math.max(...notes.map(n => Number(n.id)))
+    : 0
   return String(maxId + 1)
 }
 
-app.post('/api/notes/',(request,response)=>{
+app.post('/api/notes/', (request, response) => {
   const body = request.body
 
-  if(!request.body){
+  if (!body.content) {
     return response.status(400).json({
       error: 'content missing'
     })
   }
 
   const note = {
-    content : body.content,
+    content: body.content,
     important: body.important || false,
     id: generateId() 
   }
 
   notes = notes.concat(note)
-
-  console.log(notes)
-
-  response.json(notes)
+  
+  response.json(note) 
 })
 
 const PORT = 3001
