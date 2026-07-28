@@ -23,11 +23,17 @@ const personSchema = new mongoose.Schema({
   number: {
     type: String,
     minLength: 8,
-    required: true
+    required: true,
+    validate: {
+      // Validates 2 or 3 digits, a hyphen, followed by 1 or more digits
+      validator: function(v) {
+        return /^\d{2,3}-\d+$/.test(v)
+      },
+      message: props => `${props.value} is not a valid phone number! Standard format: 09-1234556 or 040-22334455`
+    }
   }
 })
 
-// Format returned JSON to replace _id with id string and delete __v
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
